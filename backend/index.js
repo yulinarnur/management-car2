@@ -4,12 +4,16 @@ import session from "express-session";
 import dotenv from "dotenv";
 import db from "./config/database.js";
 import SequelizeStore from "connect-session-sequelize";
+import bodyParser from "body-parser";
 import UserRoute from "./routes/UserRoute.js";
 import CarRoute from "./routes/CarRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 dotenv.config();
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const sessionStore = SequelizeStore(session.Store);
 
@@ -44,6 +48,7 @@ app.use(UserRoute);
 app.use(CarRoute);
 app.use(AuthRoute);
 
+app.use("/public", express.static("public"));
 // store.sync();
 
 app.listen(process.env.APP_PORT, () => {
