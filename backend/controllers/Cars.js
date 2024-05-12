@@ -1,6 +1,7 @@
 import { response } from "express";
 import Cars from "../models/CarModel.js";
 import Users from "../models/UserModel.js";
+import { Op } from "sequelize";
 import path from "path";
 import fs from "fs";
 
@@ -19,9 +20,27 @@ export const getCars = async (req, res) => {
     let response;
     if (req.role === "admin") {
       response = await Cars.findAll({
+        attributes: [
+          "id",
+          "uuid",
+          "model",
+          "rentPerDay",
+          "images",
+          "createdAt",
+          "updatedAt",
+        ],
         include: [
           {
             model: Users,
+            attributes: [
+              "id",
+              "uuid",
+              "name",
+              "email",
+              "role",
+              "createdAt",
+              "updatedAt",
+            ],
           },
         ],
       });
@@ -43,7 +62,44 @@ export const getCars = async (req, res) => {
   }
 };
 
-export const getCarById = (req, res) => {};
+export const getCarById = async (req, res) => {
+  try {
+    const car = await Cars.findOne({
+      where: {
+        uuid: req.params.id,
+      },
+    });
+
+    if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
+    let response;
+    if (req.role === "admin") {
+      response = await Cars.findOne({
+        where: {
+          id: car.id,
+        },
+        include: [
+          {
+            model: Users,
+          },
+        ],
+      });
+    } else {
+      response = await Cars.findOne({
+        where: {
+          [Op.and]: [{ id: car.id }, { userId: req.userId }],
+        },
+        include: [
+          {
+            model: Users,
+          },
+        ],
+      });
+    }
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
 
 export const createCar = async (req, res) => {
   const { model, rentPerDay, images } = req.body;
