@@ -1,0 +1,63 @@
+# create user
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name": "Yulinar Nur",
+    "email": "admin@gmail.com",
+    "password": "123456",
+    "confPassword": "123456",
+    "role": "admin"
+}
+
+###
+# get all users
+GET http://localhost:5000/users
+
+###
+// Get single User
+GET http://localhost:5000/users/02c9f7ee-83fd-4150-ad12-3c71ce481dec
+
+###
+// Update Usser
+PATCH http://localhost:5000/users/02c9f7ee-83fd-4150-ad12-3c71ce481dec
+Content-Type: application/json
+
+{
+    "name": "Rahmawati Updated",
+    "email": "rahmawati@gmail.com",
+    "password": "",
+    "confPassword": "",
+    "role": "user"
+}
+
+###
+// Delete User
+DELETE  http://localhost:5000/users/02c9f7ee-83fd-4150-ad12-3c71ce481dec
+
+###
+//Login Admin
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "123456"
+}
+
+###
+//Login User
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "rahmawati@gmail.com",
+    "password": "123456"
+}
+
+###
+GET http://localhost:5000/me
+
+###
+// Logout user
+DELETE http://localhost:5000/logout
