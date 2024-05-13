@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 router.get("/cars", verifyUser, getCars);
 router.get("/cars/:id", verifyUser, getCarById);
 router.post("/cars", verifyUser, upload.single("images"), createCar);
-router.patch("/cars/:id", verifyUser, updateCar);
+router.patch("/cars/:id", verifyUser, upload.single("images"), updateCar);
 router.delete("/cars/:id", verifyUser, deleteCar);
 
 export default router;

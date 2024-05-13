@@ -117,6 +117,48 @@ export const createCar = async (req, res) => {
   }
 };
 
-export const updateCar = (req, res) => {};
+export const updateCar = async (req, res) => {
+  try {
+    const car = await Cars.findOne({
+      where: {
+        uuid: req.params.id,
+      },
+    });
+
+    if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
+    const { model, rentPerDay } = req.body;
+
+    // cek gambar
+    if (req.file && req.file.filename) {
+      const imageUrl = req.file.path;
+      car.images = imageUrl;
+      console.log("tesssssss", imageUrl);
+    }
+    if (req.role === "admin") {
+      await Cars.update(
+        { model, rentPerDay, images: car.images },
+        {
+          where: {
+            id: car.id,
+          },
+        }
+      );
+    } else {
+      if (req.userId !== car.userId)
+        return res.status(403).json({ msg: "Akses terlarang" });
+      await Cars.update(
+        { model, rentPerDay, images: car.images },
+        {
+          where: {
+            [Op.and]: [{ id: car.id }, { userId: req.userId }],
+          },
+        }
+      );
+    }
+    res.status(200).json({ msg: "Car updated successfuly" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
 
 export const deleteCar = (req, res) => {};
