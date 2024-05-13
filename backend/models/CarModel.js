@@ -20,7 +20,7 @@ const Cars = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
-        len: [3, 100],
+        len: [0, 100],
       },
     },
     rentPerDay: {

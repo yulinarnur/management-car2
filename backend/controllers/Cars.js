@@ -15,6 +15,8 @@ const saveImg = (image) => {
   return `../public/uploads/${image.name}`;
 };
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 export const getCars = async (req, res) => {
   try {
     let response;
@@ -102,12 +104,13 @@ export const getCarById = async (req, res) => {
 };
 
 export const createCar = async (req, res) => {
-  const { model, rentPerDay, images } = req.body;
+  const { model, rentPerDay } = req.body;
+  const imageName = req.file.filename;
   try {
     await Cars.create({
       model: model,
       rentPerDay: rentPerDay,
-      images: req.file.path,
+      images: imageName,
       userId: req.userId,
     });
     res.status(201).json({ msg: "Car Created Successfuly" });
@@ -171,8 +174,13 @@ export const deleteCar = async (req, res) => {
 
     if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
 
-    if (car.images) {
-      fs.unlinkSync(car.images);
+    // get nama gambar
+    const imageName = path.basename(car.images);
+    // url gambar
+    const imgPath = path.join(__dirname, "../public/uploads", imageName);
+    //  hapus gambar nya
+    if (fs.existsSync(imgPath)) {
+      fs.unlinkSync(imgPath);
     }
 
     if (req.role === "admin") {
