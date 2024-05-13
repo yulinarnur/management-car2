@@ -161,4 +161,37 @@ export const updateCar = async (req, res) => {
   }
 };
 
-export const deleteCar = (req, res) => {};
+export const deleteCar = async (req, res) => {
+  try {
+    const car = await Cars.findOne({
+      where: {
+        uuid: req.params.id,
+      },
+    });
+
+    if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
+
+    if (car.images) {
+      fs.unlinkSync(car.images);
+    }
+
+    if (req.role === "admin") {
+      await Cars.destroy({
+        where: {
+          id: car.id,
+        },
+      });
+    } else {
+      if (req.userId !== car.userId)
+        return res.status(403).json({ msg: "Akses terlarang" });
+      await Cars.destroy({
+        where: {
+          [Op.and]: [{ id: car.id }, { userId: req.userId }],
+        },
+      });
+    }
+    res.status(200).json({ msg: "Car deleted successfuly" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
