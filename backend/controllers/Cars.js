@@ -174,10 +174,11 @@ export const deleteCar = async (req, res) => {
 
     if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
 
-    // get nama gambar
+    // get nama gambar (belum works)
     const imageName = path.basename(car.images);
     // url gambar
     const imgPath = path.join(__dirname, "../public/uploads", imageName);
+    console.log("halaman path", imgPath);
     //  hapus gambar nya
     if (fs.existsSync(imgPath)) {
       fs.unlinkSync(imgPath);
