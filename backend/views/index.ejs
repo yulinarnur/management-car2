@@ -1,0 +1,51 @@
+<%- include('layout/header') %>
+
+<section class="vh-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-8 px-0 d-none d-sm-block">
+        <img
+          src="../public/image/image2_login.png"
+          alt="Login image"
+          class="w-100 vh-100"
+          style="object-fit: cover; object-position: left"
+        />
+      </div>
+      <div class="col-sm-4 text-black">
+        <div class="px-1 ms-xl-5">
+          <img src="../public/image/image/head.png" class="head-img" alt="" />
+          <br />
+          <p class="login-welcome">Welcome, Admin BCR</p>
+        </div>
+        <div class="d-flex align-items-center ms-xl-5">
+          <form action="/login" method="post" style="width: 23rem">
+            <div class="form-group">
+              <label class="lbemail">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Contoh: johndee@gmail.com"
+              />
+            </div>
+            <div class="form-group">
+              <label class="lbpassword">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="6+ karakter"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary btn-sign">
+              Sign In
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%- include('layout/footer') %>

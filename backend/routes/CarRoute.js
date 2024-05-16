@@ -20,6 +20,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// render ke page
+// router.get("/cars", (req, res) => {
+//   res.render("dashboard", { title: "Dashboard" });
+// });
+
+// endpoint
 router.get("/cars", verifyUser, getCars);
 router.get("/cars/:id", verifyUser, getCarById);
 router.post("/cars", verifyUser, upload.single("images"), createCar);
