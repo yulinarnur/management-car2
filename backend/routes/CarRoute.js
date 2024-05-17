@@ -8,6 +8,7 @@ import {
   deleteCar,
 } from "../controllers/Cars.js";
 import { verifyUser } from "../middleware/AuthUser.js";
+import { Cars } from "../models/CarModel.js";
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -20,16 +21,54 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// render ke page
-// router.get("/cars", (req, res) => {
-//   res.render("dashboard", { title: "Dashboard" });
-// });
+router.get("/cars", verifyUser, async (req, res) => {
+  try {
+    const cars = await Cars.findAll();
+    res.render("car_dashboard", {
+      title: "Car Dashboard",
+      currentUser: req.user,
+      cars: cars,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.get("/cars/add", verifyUser, (req, res) => {
+  res.render("add_car", {
+    title: "Add New Car",
+    currentUser: req.user,
+  });
+});
+
+router.get("/cars/edit/:id", verifyUser, async (req, res) => {
+  try {
+    const car = await Cars.findOne({
+      where: {
+        uuid: req.params.id,
+      },
+    });
+    if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
+
+    res.render("edit_car", {
+      title: "Edit Car",
+      car: car,
+      currentUser: req.user,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+});
+
+// delete
+router.get("/delete/:id", deleteCar);
 
 // endpoint
 router.get("/cars", verifyUser, getCars);
 router.get("/cars/:id", verifyUser, getCarById);
 router.post("/cars", verifyUser, upload.single("images"), createCar);
-router.patch("/cars/:id", verifyUser, upload.single("images"), updateCar);
+router.post("/cars/:id", verifyUser, upload.single("images"), updateCar);
 router.delete("/cars/:id", verifyUser, deleteCar);
 
 export default router;

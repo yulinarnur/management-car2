@@ -23,7 +23,7 @@ router.get("/dashboard", verifyUser, adminOnly, (req, res, next) => {
           title: "Dashboard User",
           users: users,
           message: null,
-          currentUser: req.user, // Mengirim informasi pengguna yang sedang login
+          currentUser: req.user,
         });
       } else {
         res.render("dashboard", {

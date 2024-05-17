@@ -105,15 +105,16 @@ export const getCarById = async (req, res) => {
 
 export const createCar = async (req, res) => {
   const { model, rentPerDay } = req.body;
-  const imageName = req.file.filename;
+  const imageName = req.file.path;
   try {
     await Cars.create({
       model: model,
       rentPerDay: rentPerDay,
       images: imageName,
-      userId: req.userId,
+      userId: req.user.id,
     });
-    res.status(201).json({ msg: "Car Created Successfuly" });
+    res.redirect("/cars");
+    // res.status(201).json({ msg: "Car Created Successfuly" });
   } catch (error) {
     res.status(500).json({ msg: error.message });
     console.log("apaaa yaa", error);
@@ -137,70 +138,86 @@ export const updateCar = async (req, res) => {
       car.images = imageUrl;
       console.log("tesssssss", imageUrl);
     }
-    if (req.role === "admin") {
-      await Cars.update(
-        { model, rentPerDay, images: car.images },
-        {
-          where: {
-            id: car.id,
-          },
-        }
-      );
-    } else {
-      if (req.userId !== car.userId)
-        return res.status(403).json({ msg: "Akses terlarang" });
-      await Cars.update(
-        { model, rentPerDay, images: car.images },
-        {
-          where: {
-            [Op.and]: [{ id: car.id }, { userId: req.userId }],
-          },
-        }
-      );
-    }
-    res.status(200).json({ msg: "Car updated successfuly" });
+    // if (req.role === "admin") {
+    await Cars.update(
+      { model, rentPerDay, images: car.images },
+      {
+        where: {
+          id: car.id,
+        },
+      }
+    );
+    // }
+    // else {
+    //   if (req.userId !== car.userId)
+    //     return res.status(403).json({ msg: "Akses terlarang" });
+    //   await Cars.update(
+    //     { model, rentPerDay, images: car.images },
+    //     {
+    //       where: {
+    //         [Op.and]: [{ id: car.id }, { userId: req.userId }],
+    //       },
+    //     }
+    //   );
+    // }
+    // res.status(200).json({ msg: "Car updated successfuly" });
+    res.redirect("/cars");
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
 
+// export const deleteCar = async (req, res) => {
+//   try {
+//     const car = await Cars.findOne({
+//       where: {
+//         uuid: req.params.id,
+//       },
+//     });
+
+//     if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
+
+// get nama gambar (belum works)
+// const imageName = path.basename(car.images);
+// url gambar
+// const imgPath = path.join(__dirname, "../public/uploads", imageName);
+// console.log("halaman path", imgPath);
+//  hapus gambar nya
+//     if (fs.existsSync(imgPath)) {
+//       fs.unlinkSync(imgPath);
+//     }
+
+//     if (req.role === "admin") {
+//       await Cars.destroy({
+//         where: {
+//           id: car.id,
+//         },
+//       });
+//     } else {
+//       if (req.userId !== car.userId)
+//         return res.status(403).json({ msg: "Akses terlarang" });
+//       await Cars.destroy({
+//         where: {
+//           [Op.and]: [{ id: car.id }, { userId: req.userId }],
+//         },
+//       });
+//     }
+//     res.status(200).json({ msg: "Car deleted successfuly" });
+//   } catch (error) {
+//     res.status(500).json({ msg: error.message });
+//   }
+// };
+
 export const deleteCar = async (req, res) => {
   try {
-    const car = await Cars.findOne({
+    await Cars.destroy({
       where: {
-        uuid: req.params.id,
+        id: req.params.id,
       },
     });
-
-    if (!car) return res.status(404).json({ msg: "Data tidak ditemukan" });
-
-    // get nama gambar (belum works)
-    const imageName = path.basename(car.images);
-    // url gambar
-    const imgPath = path.join(__dirname, "../public/uploads", imageName);
-    console.log("halaman path", imgPath);
-    //  hapus gambar nya
-    if (fs.existsSync(imgPath)) {
-      fs.unlinkSync(imgPath);
-    }
-
-    if (req.role === "admin") {
-      await Cars.destroy({
-        where: {
-          id: car.id,
-        },
-      });
-    } else {
-      if (req.userId !== car.userId)
-        return res.status(403).json({ msg: "Akses terlarang" });
-      await Cars.destroy({
-        where: {
-          [Op.and]: [{ id: car.id }, { userId: req.userId }],
-        },
-      });
-    }
-    res.status(200).json({ msg: "Car deleted successfuly" });
+    res.redirect("/cars");
+    // res.status(200).json({ msg: "Car Deleted" });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    console.log(error.message);
   }
 };

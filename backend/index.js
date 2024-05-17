@@ -49,10 +49,10 @@ app.use(UserRoute);
 app.use(CarRoute);
 app.use(AuthRoute);
 
-app.use((req, res, next) => {
-  console.log("Request Body:", req.body);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("Request Body:", req.body);
+//   next();
+// });
 
 // Start server
 app.listen(process.env.APP_PORT, () => {

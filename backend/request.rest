@@ -3,8 +3,8 @@ POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name": "Yulinar Nur",
-    "email": "admin@gmail.com",
+    "name": "Yulinar Nur 2",
+    "email": "admin1@gmail.com",
     "password": "123456",
     "confPassword": "123456",
     "role": "admin"
@@ -20,20 +20,20 @@ GET http://localhost:5000/users/02c9f7ee-83fd-4150-ad12-3c71ce481dec
 
 ###
 // Update Usser
-PATCH http://localhost:5000/users/02c9f7ee-83fd-4150-ad12-3c71ce481dec
+PATCH http://localhost:5000/users/af876112-11b9-4317-9e5b-ef872542605f
 Content-Type: application/json
 
 {
-    "name": "Rahmawati Updated",
-    "email": "rahmawati@gmail.com",
+    "name": "Yulinar Nur 2 Update",
+    "email": "admin1@gmail.com",
     "password": "",
     "confPassword": "",
-    "role": "user"
+    "role": "admin"
 }
 
 ###
 // Delete User
-DELETE  http://localhost:5000/users/02c9f7ee-83fd-4150-ad12-3c71ce481dec
+DELETE  http://localhost:5000/users/af876112-11b9-4317-9e5b-ef872542605f
 
 ###
 //Login Admin

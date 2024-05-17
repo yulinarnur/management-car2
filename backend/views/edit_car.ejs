@@ -1,0 +1,65 @@
+<%- include('layout/dashboard_header') %>
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-9" style="margin-left: 20%">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Edit Car</h6>
+        </div>
+        <div class="card-body px-4 pt-0 pb-2">
+          <form
+            action="/cars/<%= car.uuid %>"
+            method="post"
+            id="edit-form"
+            enctype="multipart/form-data"
+          >
+            <div class="mb-3">
+              <label for="model" class="form-label">Model</label>
+              <input
+                type="text"
+                class="form-control"
+                id="model"
+                name="model"
+                value="<%= car.model %>"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="rentPerDay" class="form-label">Harga Sewa</label>
+              <input
+                type="number"
+                class="form-control"
+                id="rentPerDay"
+                name="rentPerDay"
+                value="<%= car.rentPerDay %>"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="images" class="form-label">Image</label>
+              <input
+                type="file"
+                class="form-control"
+                id="images"
+                name="images"
+              />
+              <img
+                src="/<%= car.images %>"
+                width="100"
+                class="img-thumbnail mt-2"
+              />
+            </div>
+            <input type="hidden" name="old_image" value="<%= car.images %>" />
+
+            <button type="submit" name="submit" class="btn btn-primary">
+              Update Car
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('layout/dashboard_footer') %>

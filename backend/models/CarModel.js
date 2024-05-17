@@ -4,7 +4,7 @@ import Users from "./UserModel.js";
 
 const { DataTypes } = Sequelize;
 
-const Cars = db.define(
+export const Cars = db.define(
   "car",
   {
     uuid: {
